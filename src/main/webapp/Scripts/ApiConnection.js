@@ -1,31 +1,33 @@
-﻿define(["jQuery"], function ($) {
+﻿/*global define */
+define(["jQuery"], function ($) {
+	function ApiConnection(url) {
+		var self = this;
 
-    function ApiConnection(url) {
+		self.getAll = function (callback) {
+			$.getJSON(url).done(callback);
+		};
 
-        var self = this;
+		self.getById = function (id, callback) {
+			$.getJSON(url + '/' + id).done(callback);
+		};
 
-        self.getAll = function (callback) {
-            $.getJSON(url, callback);
-        }
+		// Eksempel med deferred
+		self.update = function (entity) {
+			return $.ajax({ type: 'put', data: entity, url: url });
+		};
 
-        self.getById = function (id, callback) {
-            $.getJSON(url + '/' + id, callback);
-        }
+		self.add = function (entity, callback) {
+			$.post(url, entity).done(callback);
 
-        self.update = function (entity, callback) {
-            //$.post(url, entity, callback);
-            $.ajax({type:'put',data: entity, url: url}).done(callback);
-        }
+		};
 
-        self.remove = function (entity, callback) {
-            $.ajax({ type: 'delete', data: entity, url: url }).done(callback);
-        }
+		self.remove = function (entity, callback) {
+			$.ajax({ type: 'delete', data: entity, url: url }).done(callback);
+		};
+		
+		return self;
+	}
 
-
-        return self;
-
-    }
-
-    return ApiConnection;
+	return ApiConnection;
 
 });
